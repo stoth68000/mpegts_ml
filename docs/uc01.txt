@@ -1,0 +1,107 @@
+
+
+Business Conditions:
+
+A sports news production facility creates a live sports talk
+shows five days a week, typically 8pm to 10pm. The show is
+transferred to a ESPN distribution plant for global distribution.
+
+The show is mostly talking heads, multiple cameras, split screen.
+The show occasionally shows clips, stills, social media posts
+as cut-away switched elements.
+
+A sports new production facility creates a transport stream 7x24,
+regardless of whether the show is on or off air.
+The output format and framerate is AVC 20mbps 1280x720p59.94
+
+The transport contains either static station identifier, when it's
+"off air", or a two hour news sports talk show when it's on air.
+
+The static station identifier cannot be predicted, it could be
+someones holiday photo of their wife and kids today, tomorrow
+it might be bars and tone, in a week it could just be black, or red.
+Its a static image, with fixed text showing the station facility name.
+
+Under blue sky conditions, the show is typically on air
+mon, wed, fri, sat, sun 8pm to 10pm.
+
+Under certain sports constraints that happen 2-3 times a month,
+the studio is asked to outputs their show "early late" because other
+programming on ESPN has bumped the schedule. So the show may run
+from 9.15pm to 11pm, a shortened show, or a longer unusual
+show from example 1pm to 3.30pm.
+
+It's approximately 2hrs normally, but could be 1h45, 1hr12 or 2hr30.
+
+There is a worse case condition, typically twice a year, where the show
+runs in marathon mode, on an unpredictable schedule, for 8hrs.
+
+A human observer, located somewhere else in the globe,
+eyes-on-glass watches the 7x24 stream, during supposed production hours,
+contacts ESPN via a phone call when the show is
+going on and off air. The observer has no understanding or pre-arranged
+knowledge of whether the static content is part of the show, or an indication
+the show is off air.
+
+Goal: Remove the human observer and automate the process.
+Goal: Asasess the signal once per second for an initial prediction.
+Goal: Within 5 seconds, automation MUST make a 98% or better prediction
+      that reliabily indicates if the show is on/off air, and contact ESPN.
+
+Goal: Automation of signal monitoring as it egresses the production facility.
+
+The following circumstances are desirable, and should be
+automated for detection.
+1. Create a 7x24 monitoring application that observes
+   the output of the production facility feed, which runs 7x24,
+   determine/predict based exclusively on the stream, if the show is
+   on or off air.
+2. Specifically, disregard all audio and focus specifically on
+   visual content within the stream.
+3. Make an initial assessment every second, off or on air.
+4. Make a formal assessment every 5 seconds, off or on air, notify ESPN of the state.
+
+---------------------------------------
+Technical approach:
+
+A probe to examine the transport stream, gather data, collect features.
+Initially, gather feature details once per second.
+Push these features into KAFKA, and store the data for future accelerated learning
+exercises.
+
+A classifier process will listen to kafka, or data from disk, which has previously
+passed schema validation.
+
+A supervised model should properly and faithfully indicate via the data
+of the content is on or off air. Thereby teaching relationships. 
+
+Gather data that indicates proper classification (on off air), supervisor the model.
+Create a human interface for the probe so it knows when to augment the supervising data with
+on or off air. We'll use the human around the world, their signal, to teach the
+probe its label classification state.
+
+Gather data that indicates proper classification (on off air), seek prodiction
+and determine if the automated prediction matches the human operator.
+
+---------------------------------------
+Probe Implementation:
+
+Probe is a variation of the pes_extractor.
+
+New repo, owned by steven.
+Leverages ltntstools pes_extraction capability, AVIO for SRT.
+
+Simplest probe feature tool possible, no bells and whilstes because
+we want to start classifying data as soon as possible.
+JSON statistics will be written to a named pipe that will feed
+kafka cat.IN verbose 1 or higher, stats also go to console.
+
+example tooling:
+
+probe_uc_01
+ -i udp://a.b.c.d:port
+ -P 0xnn (pid)
+ -S 0xe0 (es subtype)
+ -I sample interval in seconds. (def 1)
+ -o <named pipe>
+ -v verbose level
