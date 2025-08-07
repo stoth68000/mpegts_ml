@@ -38,7 +38,7 @@ model.fit(X_train, y_train, epochs=20, batch_size=8, validation_data=(X_test, y_
 
 # Save model and scaler
 keras.saving.save_model(model, "uc01-model-on_air_classifier.keras")
-dump(scaler, "scaler.joblib")
+dump(scaler, "uc01-scaler.joblib")
 
 print("Model and scaler saved.")
 
