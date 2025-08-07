@@ -1,0 +1,82 @@
+
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Datetime and Video Stream Feature Schema",
+  "type": "object",
+  "properties": {
+    "day_of_week": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 6
+    },
+    "hour": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 23
+    },
+    "minute": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 59
+    },
+    "second": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 59
+    },
+    "unixtime": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 4294967296
+    },
+    "avc_ibp_total_slice_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 500
+    },
+    "avc_ibp_total_slice_size": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 240000000
+    },
+    "transport_bit_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 240000000
+    },
+    "i_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 500
+    },
+    "p_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 500
+    },
+    "b_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 500
+    },
+    "on_air": {
+      "type": "boolean",
+    }
+  },
+  "required": [
+    "day_of_week",
+    "hour",
+    "minute",
+    "second",
+    "unixtime",
+    "avc_ibp_total_slice_count",
+    "avc_ibp_total_slice_size",
+    "transport_bit_count",
+    "i_count",
+    "b_count",
+    "p_count",
+    "on_air"
+  ],
+  "additionalProperties": false
+}
+
