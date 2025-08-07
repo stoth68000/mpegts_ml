@@ -9,3 +9,6 @@ train:
 
 test:
 	python3 uc01-test-model.py
+
+clean:
+	rm -f uc01-model-on_air_classifier.keras uc01-scaler.joblib

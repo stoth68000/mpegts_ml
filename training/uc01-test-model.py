@@ -1,30 +1,16 @@
-import json
+import os
 import numpy as np
 import tensorflow as tf
-from sklearn.preprocessing import StandardScaler
+from joblib import load
 
-# Define the feature names in correct order
+# Define feature order
 feature_names = [
     "day_of_week", "hour", "minute", "second", "unixtime",
     "avc_ibp_total_slice_count", "avc_ibp_total_slice_size",
     "transport_bit_count", "i_count", "p_count", "b_count"
 ]
 
-# Load saved model
-model = tf.keras.models.load_model("uc01-model-on_air_classifier.keras")
-
-# Load the same scaler used during training (optional: persist with joblib)
-scaler = StandardScaler()
-
-# Refit or reuse scaler based on your original training data
-# For demo purposes, here we refit using same method:
-with open("uc01-training.json") as f:
-    train_data = json.load(f)
-
-X_train = np.array([[r[fn] for fn in feature_names] for r in train_data], dtype=np.float32)
-scaler.fit(X_train)
-
-# New data for prediction
+# Input record for prediction
 new_record = {
     "day_of_week": 4,
     "hour": 7,
@@ -39,11 +25,25 @@ new_record = {
     "b_count": 30
 }
 
-# Convert and scale input
+# Prepare input array
 X_new = np.array([[new_record[fn] for fn in feature_names]], dtype=np.float32)
-X_new_scaled = scaler.transform(X_new)
 
-# Predict
+# Check for model and scaler files
+model_path = "uc01-model-on_air_classifier.keras"
+scaler_path = "uc01-scaler.joblib"
+
+if not os.path.exists(model_path):
+    raise FileNotFoundError(f"Model file not found: {model_path}. Please train the model first.")
+
+if not os.path.exists(scaler_path):
+    raise FileNotFoundError(f"Scaler file not found: {scaler_path}. Run train_model.py to generate it.")
+
+# Load model and scaler
+model = tf.keras.models.load_model(model_path)
+scaler = load(scaler_path)
+
+# Scale input and predict
+X_new_scaled = scaler.transform(X_new)
 proba = model.predict(X_new_scaled)[0][0]
 pred = proba >= 0.5
 
