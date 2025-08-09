@@ -11,7 +11,10 @@ with open("uc01-training.json") as f:
     records = json.load(f)
 
 feature_names = [
-    "day_of_week", "hour", "minute", "second", "unixtime",
+# Remove non-important feature names for time, remove the day, hour, minute, second categorization
+# Only initial goal is to predict classification regardless of time
+#   "day_of_week", "hour", "minute", "second",
+#   "unixtime",
     "avc_ibp_total_slice_count", "avc_ibp_total_slice_size",
     "transport_bit_count", "i_count", "p_count", "b_count"
 ]

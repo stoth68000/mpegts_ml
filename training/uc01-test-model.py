@@ -5,24 +5,25 @@ from joblib import load
 
 # Define feature order
 feature_names = [
-    "day_of_week", "hour", "minute", "second", "unixtime",
+#   "day_of_week", "hour", "minute", "second",
+#   "unixtime",
     "avc_ibp_total_slice_count", "avc_ibp_total_slice_size",
     "transport_bit_count", "i_count", "p_count", "b_count"
 ]
 
 # Input record for prediction
 new_record = {
-    "day_of_week": 4,
-    "hour": 7,
-    "minute": 9,
-    "second": 32,
-    "unixtime": 1754564972,
-    "avc_ibp_total_slice_count": 46,
-    "avc_ibp_total_slice_size": 15120336,
-    "transport_bit_count": 19592608,
+#   "day_of_week": 6,
+#   "hour": 8,
+#   "minute": 10,
+#   "second": 32,
+#   "unixtime": 1754742475,
+    "avc_ibp_total_slice_count": 60,
+    "avc_ibp_total_slice_size":   700728,
+    "transport_bit_count":      20266400,
     "i_count": 1,
-    "p_count": 15,
-    "b_count": 30
+    "p_count": 14,
+    "b_count": 45
 }
 
 # Prepare input array
@@ -49,4 +50,3 @@ pred = proba >= 0.5
 
 print(f"Predicted probability of on_air=True: {proba:.4f}")
 print(f"Predicted label: {'on_air' if pred else 'off_air'}")
-
