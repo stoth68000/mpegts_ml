@@ -1,7 +1,15 @@
 import os
+import sys
+import argparse
 import numpy as np
 import tensorflow as tf
 from joblib import load
+
+# --- Argument parser ---
+parser = argparse.ArgumentParser(description="Predict on_air from encoded bitrate.")
+parser.add_argument("--slicebitrate", type=float, required=True,
+                    help="Encoded bitrate value (maps to avc_ibp_total_slice_size).")
+args = parser.parse_args()
 
 # Define feature order
 feature_names = [
@@ -19,7 +27,7 @@ new_record = {
 #   "second": 32,
 #   "unixtime": 1754742475,
     "avc_ibp_total_slice_count": 60,
-    "avc_ibp_total_slice_size":   700728,
+    "avc_ibp_total_slice_size": args.slicebitrate,
     "transport_bit_count":      20266400,
     "i_count": 1,
     "p_count": 14,
@@ -48,5 +56,6 @@ X_new_scaled = scaler.transform(X_new)
 proba = model.predict(X_new_scaled)[0][0]
 pred = proba >= 0.5
 
+print(f"Input slicebitrate: {args.slicebitrate}")
 print(f"Predicted probability of on_air=True: {proba:.4f}")
 print(f"Predicted label: {'on_air' if pred else 'off_air'}")
