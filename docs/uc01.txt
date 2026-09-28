@@ -143,6 +143,21 @@ Created a new data set using a normal latency encoding, with off air for 60, on 
 
 When removing the time element from all training data, I start to see more correlation between predictions for off air non-training data.
 Changed uc01-test-model.py to accept an incoming slice rate and make a prediction based on that. Looks promising.
+Coarser bins: use is_night, is_weekend instead of minute/second (which are rarely informative and noisy).
+
+Feature Importance
+-------------------
+
+Multiply certain inputs by constants before the network. This bakes in your belief that some features should have more influence.
+
+Time fields can become “shortcut” features that steer the model in weird ways. A few likely reasons why day_of_week/hour/minute/second nudged predictions toward off_air:
+Why this happens
+Real correlation in your data: maybe most off‑air events really do happen at certain hours/days (overnight, maintenance windows, weekly resets). The model learns “it’s 03:00 → probably off_air”.
+Spurious correlation / sampling bias: if your dataset under‑represents on‑air at some times, the model overfits to that artifact.
+Bad representation for cyclic time: integers 23 and 0 are far apart numerically but adjacent in time. Linear models/layers can draw odd boundaries from raw hour/min/sec.
+Train/test split leakage by time: random split can put different time bands in train vs test. The model then “extrapolates” poorly on unseen times.
+Scale dominance / interaction: tiny-variance time features + other large features can create unstable interactions after standardization.
+
 
 
 

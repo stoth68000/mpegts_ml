@@ -29,9 +29,9 @@ new_record = {
     "avc_ibp_total_slice_count": 60,
     "avc_ibp_total_slice_size": args.slicebitrate,
     "transport_bit_count":      20266400,
-    "i_count": 1,
-    "p_count": 14,
-    "b_count": 45
+    "i_count": 0,
+    "p_count": 240,
+    "b_count": 0
 }
 
 # Prepare input array
